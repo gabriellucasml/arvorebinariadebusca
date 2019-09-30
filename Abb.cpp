@@ -44,11 +44,11 @@ No* Abb::buscar(No* raiz, int valor){
 
 void Abb::inserir(No* no){
     int valorNo = no->getValor();
-    No* aux = buscar(no, valorNo);
+    No* aux = buscar(this->getRaiz(), valorNo);
     if(aux->getValor() == no->getValor()){
         cout << "Nó já existe!" << endl;
     }else{
-        if(aux->getValor() < no->getValor()){
+        if(aux->getValor() > no->getValor()){
             aux->setEsq(no);
         }else{
             aux->setDir(no);
