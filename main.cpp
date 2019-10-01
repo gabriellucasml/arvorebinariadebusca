@@ -15,6 +15,8 @@ int main(int argc, char* argv[]){
     no = arvore->criarNo(12);
     arvore->inserir(no);
     no = arvore->buscar(arvore->getRaiz(), 12);
+    no = arvore->criarNo(14);
+    arvore->inserir(no);
 
     return 0;
 }

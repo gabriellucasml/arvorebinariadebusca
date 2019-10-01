@@ -9,10 +9,11 @@ private:
 public:
     Abb();
     No* criarNo(int valor);
-    No* buscar(No* raiz, int valor);
-    void inserir(No* no);
     No* getRaiz();
     void setRaiz(int valor);
+    No* buscar(No* raiz, int valor);
+    void inserir(No* no);
+    void remover(int valor);
 
 };
 #endif

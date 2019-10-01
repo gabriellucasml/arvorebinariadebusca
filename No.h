@@ -3,9 +3,12 @@
 
 class No{
 private:
-	int valor;
-	No *esq;
-	No *dir;
+	int valor;  //chave ou valor que nó segura
+	int qntEsq; //Quantidade de nós na sub-árvore à esquerda
+	int qntDir; //Quantidade de nós na sub-árvore à direita
+	No *esq;    //Ponteiro que aponta para o filho da esquerda
+	No *dir;    //Ponteiro que aponta para o filho da direita
+	No *pai;    //Ponteiro que aponta para o pai
 public:
 	No();	
 	int getValor();
@@ -14,6 +17,12 @@ public:
 	void setEsq(No *esq);
 	No *getDir();
 	void setDir(No *dir); 
+	No *getPai();
+	void setPai(No *pai);
+	int getQntEsq();
+	void incrementarQntEsq();
+	int getQntDir();
+	void incrementarQntDir();
 };
 
 #endif

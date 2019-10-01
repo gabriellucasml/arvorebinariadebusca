@@ -49,9 +49,29 @@ void Abb::inserir(No* no){
         cout << "Nó já existe!" << endl;
     }else{
         if(aux->getValor() > no->getValor()){
+            no->setPai(aux);
             aux->setEsq(no);
+            while(aux != nullptr){
+                if(no->getValor() < aux->getValor()){
+                    aux->incrementarQntEsq();
+                    aux = aux->getPai();
+                }else{
+                    aux->incrementarQntDir();
+                    aux = aux->getPai();
+                }    
+            }
         }else{
+            no->setPai(aux);
             aux->setDir(no);
+            while(aux != nullptr){
+                if(no->getValor() < aux->getValor()){
+                    aux->incrementarQntEsq();
+                    aux = aux->getPai();
+                }else{
+                    aux->incrementarQntDir();
+                    aux = aux->getPai();
+                }  
+            }
         }
     }
 }
