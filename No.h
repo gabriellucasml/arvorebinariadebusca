@@ -20,9 +20,13 @@ public:
 	No *getPai();
 	void setPai(No *pai);
 	int getQntEsq();
+	void setQntEsq(int valor);
 	void incrementarQntEsq();
+	void decrementarQntEsq();
 	int getQntDir();
+	void setQntDir(int valor);
 	void incrementarQntDir();
+	void decrementarQntDir();
 };
 
 #endif

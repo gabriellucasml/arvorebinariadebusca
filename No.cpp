@@ -40,6 +40,10 @@ void No::setPai(No *pai){
 int No::getQntEsq(){
 	return this->qntEsq;
 }
+
+void No::setQntEsq(int valor){
+	this->qntEsq = valor;
+}
 	
 void No::incrementarQntEsq(){
 	this->qntEsq += 1;
@@ -49,6 +53,18 @@ int No::getQntDir(){
 	return this->qntDir;
 }
 
+void No::setQntDir(int valor){
+	this->qntDir = valor;
+}
+
 void No::incrementarQntDir(){
 	this->qntDir += 1;
+}
+
+void No::decrementarQntEsq(){
+	this->qntEsq -= 1;
+}
+
+void No::decrementarQntDir(){
+	this->qntDir -= 1;
 }
