@@ -7,6 +7,7 @@ using namespace std;
 int main(int argc, char* argv[]){
     Abb *arvore = new Abb();
     No* no = new No();
+    No* aux = new No();
     arvore->setRaiz(11);
     no = arvore->buscar(arvore->getRaiz(),11); 
     no = arvore->criarNo(15);
@@ -24,6 +25,6 @@ int main(int argc, char* argv[]){
     no = arvore->criarNo(13);
     arvore->inserir(no);
     arvore->remover(15);
-
+    arvore->enesimoElemento(arvore->getRaiz(), 2);
     return 0;
 }

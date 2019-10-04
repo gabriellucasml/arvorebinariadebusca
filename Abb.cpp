@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Abb.h"
 #include "No.h"
 
@@ -176,10 +177,33 @@ void Abb::remover(int valor){
                     aux->getPai()->setEsq(maiorEsq);
                 }
             }
-            delete(aux1);
             delete(aux);
         }
     } else{
         cout << "Nó não existe na árvore!" << endl;
     }
+}
+
+No* Abb::enesimoElemento(No* raiz, int n){
+    int i = 0;
+    vector<No*> ordem;
+    if(raiz != nullptr){        
+        raiz = enesimoElemento(raiz->getEsq(), n);
+        ordem.push_back(raiz);
+        i++;
+        if(i == n){
+            return ordem.back();
+        }
+        enesimoElemento(raiz->getDir(), n);
+    }    
+}
+
+void Abb::ordemSimetrica(No* raiz){
+    for(int i = 0; i <= 2; i++){    
+        if(raiz != nullptr){
+            ordemSimetrica(raiz->getEsq());
+            std::cout << raiz->getValor()<< " " << endl;
+            ordemSimetrica(raiz->getDir());
+        }
+    }    
 }

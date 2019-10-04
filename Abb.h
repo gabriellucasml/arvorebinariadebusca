@@ -14,6 +14,7 @@ public:
     No* buscar(No* raiz, int valor);
     void inserir(No* no);
     void remover(int valor);
-
+    No* enesimoElemento(No* raiz, int n);
+    void ordemSimetrica(No* raiz);
 };
 #endif
