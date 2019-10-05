@@ -4,6 +4,7 @@ No::No(){
 	pai = nullptr;
 	esq = nullptr;
 	dir = nullptr;
+	nivel = 0;
 	valor = 0;
 	qntEsq = 0;
 	qntDir = 0;
@@ -14,6 +15,22 @@ int No::getValor(){
 }
 void No::setValor(int valor){
 	this->valor = valor;
+}
+
+int No::getNivel(){
+	return this->nivel;
+}
+
+void No::setNivel(int nivel){
+	this->nivel = nivel;
+}
+
+void No::incrementarNivel(){
+	this->nivel += 1;
+}
+
+void No::decrementarNivel(){
+	this->nivel -= 1;
 }
 
 No *No::getEsq(){

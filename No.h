@@ -6,6 +6,7 @@ private:
 	int valor;  //chave ou valor que nó segura
 	int qntEsq; //Quantidade de nós na sub-árvore à esquerda
 	int qntDir; //Quantidade de nós na sub-árvore à direita
+	int nivel;  //Nível em que está localizado o nó
 	No *esq;    //Ponteiro que aponta para o filho da esquerda
 	No *dir;    //Ponteiro que aponta para o filho da direita
 	No *pai;    //Ponteiro que aponta para o pai
@@ -27,6 +28,10 @@ public:
 	void setQntDir(int valor);
 	void incrementarQntDir();
 	void decrementarQntDir();
+	int getNivel();
+	void setNivel(int nivel);
+	void incrementarNivel();
+	void decrementarNivel();
 };
 
 #endif

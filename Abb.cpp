@@ -7,6 +7,7 @@ using namespace std;
 
 Abb::Abb(){
     raiz = new No();
+    raiz->setNivel(1);
 }
 
 No* Abb::criarNo(int valor){
@@ -52,6 +53,7 @@ void Abb::inserir(No* no){
         if(aux->getValor() > no->getValor()){
             no->setPai(aux);
             aux->setEsq(no);
+            no->setNivel(no->getPai()->getNivel()+1);
             while(aux != nullptr){
                 if(no->getValor() < aux->getValor()){
                     aux->incrementarQntEsq();
@@ -64,6 +66,7 @@ void Abb::inserir(No* no){
         }else{
             no->setPai(aux);
             aux->setDir(no);
+            no->setNivel(no->getPai()->getNivel()+1);
             while(aux != nullptr){
                 if(no->getValor() < aux->getValor()){
                     aux->incrementarQntEsq();
@@ -101,14 +104,16 @@ void Abb::remover(int valor){
         }else if((aux->getDir() == nullptr) ^ (aux->getEsq() == nullptr)){//se umas das suas sub-árvores forem nulas
             if(aux->getDir() == nullptr){ //ou seja, a sub-árvore à esquerda não é nula
                 if(aux->getValor() > aux->getPai()->getValor()){//ou seja, é uma sub-árvore à direita de seu pai
+                    ajustarNiveis(aux);
                     aux->getPai()->setDir(aux->getEsq());
                     while(decrementoQntFilhos->getPai() != nullptr){
-                    decrementoQntFilhos->getPai()->decrementarQntEsq();
-                    decrementoQntFilhos = decrementoQntFilhos->getPai();
-                }
+                        decrementoQntFilhos->getPai()->decrementarQntEsq();
+                        decrementoQntFilhos = decrementoQntFilhos->getPai();
+                    }
                     delete(aux);
                     delete(decrementoQntFilhos);
                 }else{//ou seja, é uma sub-árvore à esquerda do seu pai
+                    ajustarNiveis(aux);
                     aux->getPai()->setEsq(aux->getEsq());
                     while(decrementoQntFilhos->getPai() != nullptr){
                         decrementoQntFilhos->getPai()->decrementarQntDir();
@@ -119,6 +124,7 @@ void Abb::remover(int valor){
                 }
             }else{//ou seja, se a sub-árvore à direita não é nula
                 if(aux->getValor() > aux->getPai()->getValor()){//ou seja, é uma sub-árvore à direita de seu pai
+                    ajustarNiveis(aux);
                     aux->getPai()->setDir(aux->getEsq());
                     while(decrementoQntFilhos->getPai() != nullptr){
                         decrementoQntFilhos->getPai()->decrementarQntDir();
@@ -127,6 +133,7 @@ void Abb::remover(int valor){
                     delete(aux);
                     delete(decrementoQntFilhos);
                 }else{//ou seja, é uma sub-árvore à esquerda do seu pai
+                    ajustarNiveis(aux);
                     aux->getPai()->setEsq(aux->getEsq());
                     while(decrementoQntFilhos->getPai() != nullptr){
                         decrementoQntFilhos->getPai()->decrementarQntEsq();
@@ -154,14 +161,17 @@ void Abb::remover(int valor){
                 aux1 = aux1->getPai();
             }
             if(maiorEsq->getEsq() == nullptr){//se o maior nó da sub-árvore à esquerda é folha
-                maiorEsq->setDir(aux->getDir());
-                aux->getDir()->setPai(maiorEsq);
-                maiorEsq->setEsq(aux->getEsq());
-                aux->getEsq()->setPai(maiorEsq);
+                maiorEsq->setNivel(aux->getNivel());//Diz que o nível do maior nó da esquerda é igual ao nível do no que será deletado
+                maiorEsq->setDir(aux->getDir());//diz que o filho do maior nó da esquerda é o filho à direita do nó que será deletado
+                aux->getDir()->setPai(maiorEsq);//diz que o pai do nó à direita do nó que será deletadado é o maior nó da subárvore à esquerda
+                maiorEsq->setEsq(aux->getEsq());//diz que o filho do maior nó da esquerda é o filho à esquerda do nó que será deletado
+                aux->getEsq()->setPai(maiorEsq);//diz que o pai do nó à esquerda do nó que será deletadado é o maior nó da subárvore à esquerda
                 maiorEsq->setQntDir(aux->getQntDir());
                 maiorEsq->setQntEsq(aux->getQntEsq());
                 decrementoQntFilhos = maiorEsq;
-            }else{
+            }else{                            //existe uma subárvore à esquerda
+                ajustarNiveis(maiorEsq->getEsq());
+                maiorEsq->setNivel(aux->getNivel());
                 maiorEsq->getEsq()->setPai(maiorEsq->getPai());
                 maiorEsq->getPai()->setDir(maiorEsq->getEsq());
                 maiorEsq->setDir(aux->getDir());
@@ -184,26 +194,82 @@ void Abb::remover(int valor){
     }
 }
 
+void Abb::ajustarNiveis(No* no){
+    if(no->getEsq() == nullptr && no->getDir() == nullptr)
+        no->decrementarNivel();
+    if(no->getEsq() != nullptr){
+        ajustarNiveis(no->getEsq());
+        no->decrementarNivel();
+        ajustarNiveis(no->getDir());
+    }
+}
+
 No* Abb::enesimoElemento(No* raiz, int n){
-    int i = 0;
-    vector<No*> ordem;
+    static vector<No*> ordem;
     if(raiz != nullptr){        
-        raiz = enesimoElemento(raiz->getEsq(), n);
+        if (raiz->getEsq() != nullptr){
+            enesimoElemento(raiz->getEsq(), n);
+        } 
         ordem.push_back(raiz);
-        i++;
-        if(i == n){
-            return ordem.back();
+        if (raiz->getDir() != nullptr){
+            enesimoElemento(raiz->getDir(), n);
         }
-        enesimoElemento(raiz->getDir(), n);
-    }    
+    }
+    return ordem[n-1];
+}
+
+
+int Abb::posicao(No* raiz,int x){
+    int retorno;
+    int size = ordem.size();
+    for(int i = 0; i < size; i++){
+        if(ordem[i]->getValor() == x){
+            retorno = i+1;
+        }
+    }
+    return retorno;
 }
 
 void Abb::ordemSimetrica(No* raiz){
-    for(int i = 0; i <= 2; i++){    
+        static int x;
         if(raiz != nullptr){
-            ordemSimetrica(raiz->getEsq());
-            std::cout << raiz->getValor()<< " " << endl;
-            ordemSimetrica(raiz->getDir());
+            if(raiz->getEsq() != nullptr){
+                ordemSimetrica(raiz->getEsq());
+            }
+            x++;
+            std::cout << x << " " << raiz->getValor()<< " " << endl;
+            if(raiz->getDir() != nullptr){
+                ordemSimetrica(raiz->getDir());
+            }
+        }    
+}
+
+int Abb::mediana(No* raiz){
+    if(ordem.size()%2 == 0){
+        return ordem[(ordem.size()/2)-1]->getValor();
+    }else{
+        return ordem[ordem.size()/2]->getValor();
+    }
+}
+
+void Abb::carregaVector(No* raiz){
+    static vector<No*> tqr ;
+    if(raiz != nullptr){        
+        if (raiz->getEsq() != nullptr){
+            carregaVector(raiz->getEsq());
+        } 
+        tqr.push_back(raiz);
+        if (raiz->getDir() != nullptr){
+            carregaVector(raiz->getDir());
         }
-    }    
+    }
+    this->ordem = tqr;  
+}
+
+void Abb::esvaziarVector(){
+    this->ordem.clear();
+}
+
+void Abb::toString(No* raiz){
+    //je sais pas qu'est-ce je suis en train de fair ici ;-;
 }

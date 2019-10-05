@@ -25,6 +25,20 @@ int main(int argc, char* argv[]){
     no = arvore->criarNo(13);
     arvore->inserir(no);
     arvore->remover(15);
-    arvore->enesimoElemento(arvore->getRaiz(), 2);
+    arvore->ordemSimetrica(arvore->getRaiz());
+    
+    /*
+        Comentários do Gabriel H. para como utilizar a carregarVector(), posicao() e mediana():
+        Infelizmente eu fui deveras incompetente e acabei fazendo gambiarras estúpidas pra fazer
+        isso funcionar.
+        O fato é que as funções posição e mediana utilizam a carregaVector, que vai colocar o 
+        percurso bem direitinho dentro de um vetor.
+        Qual é o problema? se tu chamar o carregaVector mais do que deves, ele vai duplicar o tamanho.
+        portanto, para posiçao e mediana funcionar, chama o carregaVector só uma vez, pelo amor de deus, eu suplico.
+    */
+    arvore->carregaVector(arvore->getRaiz());
+    cout << arvore->enesimoElemento(arvore->getRaiz(), 6)->getValor() << " <- Enesimo Elemento" << endl;
+    cout << arvore->posicao(arvore->getRaiz(),16) << " <- posicao" <<endl;
+    cout << arvore->mediana(arvore->getRaiz()) << " <- Mediana" << endl;
     return 0;
 }
