@@ -1,4 +1,9 @@
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <fstream>
 #include <vector>
 #include "Abb.h"
 #include "No.h"
@@ -270,6 +275,59 @@ void Abb::esvaziarVector(){
     this->ordem.clear();
 }
 
-void Abb::toString(No* raiz){
-    //je sais pas qu'est-ce je suis en train de fair ici ;-;
+void Abb::toString(){
+    esvaziarVector();
+    carregaVector(getRaiz());
+    vector<string> nivel;
+    for(No* i : this->ordem){
+        nivel[i->getNivel()].append(to_string(i->getValor()));
+    }
+    for(int i = 0; i < nivel.size(); i++){
+        cout << "Nivel " << i << ": " << nivel[i] << endl; 
+    }
+}
+
+void Abb::importarArvore(){
+    ifstream myfile;
+    myfile.open("arquivodeentrada.txt");
+    string aux;
+    getline(myfile, aux);
+    istringstream iss(aux);
+    vector<string> nos;
+    do{
+        string subs;
+        iss >> subs;
+        nos.push_back(subs);
+    } while (iss);
+    this->setRaiz(stoi(nos[0]));
+    for(int i = 1; i<nos.size(); i++){
+        if(nos[i] != "")
+            inserir(criarNo(stoi(nos[i])));
+    }
+}
+
+void Abb::comando(){
+    ifstream myfile;
+    myfile.open("arquivodecomando.txt");
+    string auxiliar; //string onde será armazenada a linha / auxiliará na leitura do arquivo
+    while(getline(myfile, auxiliar)){ //espero que isso funcione -_-
+        if (auxiliar.compare("ENESIMO") == 0){
+            std::cout << "> Elemento escolhido: " << enesimoElemento(getRaiz(), std::stoi(auxiliar));
+        } else if (auxiliar.compare("POSICAO") == 0){
+        //vish
+        } else if (auxiliar.compare("MEDIANA") == 0){
+        //vish
+        } else if (auxiliar.compare("CHEIA") == 0){
+        //vish
+        } else if (auxiliar.compare("COMPLETA") == 0){
+        //vish
+        } else if (auxiliar.compare("IMPRIMA") == 0){
+        //vish
+        } else if (auxiliar.compare("REMOVA") == 0){
+            remover(std::stoi(auxiliar));
+        } else if (auxiliar.compare("INSIRA") == 0){
+            inserir(criarNo(std::stoi(auxiliar))); //i hope it works like this :')
+        }
+    }
+    myfile.close();
 }

@@ -1,15 +1,13 @@
 #ifndef _ABB_H_
 #define _ABB_H_
-
 #include <vector>
-using namespace std;
 
 class No;
 
 class Abb{
 private:
     No* raiz;
-    vector<No*> ordem;
+    std::vector<No*> ordem;
 
 public:
     Abb();
@@ -26,7 +24,9 @@ public:
     void carregaVector(No* raiz);
     void esvaziarVector();
     void ajustarNiveis(No* no);
-    void toString(No* raiz);
+    void toString();
+    void comando();
+    void importarArvore();
 };
 
 #endif
