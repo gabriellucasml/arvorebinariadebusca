@@ -8,22 +8,26 @@ class Abb{
 private:
     No* raiz;
     std::vector<No*> ordem;
+    int altura;
 
 public:
     Abb();
     No* criarNo(int valor);
     No* getRaiz();
-    void setRaiz(int valor);
     No* buscar(No* raiz, int valor);
-    void inserir(No* no);
-    void remover(int valor);
     No* enesimoElemento(No* raiz, int n);
-    void ordemSimetrica(No* raiz);
+    bool ehCheia();
+    bool ehCompleta();
     int posicao(No* raiz, int x);
     int mediana(No* raiz);
+    void calcularAltura();
+    void setRaiz(int valor);
+    void inserir(No* no);
+    void remover(int valor);
     void carregaVector(No* raiz);
     void esvaziarVector();
     void ajustarNiveis(No* no);
+    void ordemSimetrica(No* raiz);
     void toString();
     void comando();
     void importarArvore();

@@ -130,7 +130,7 @@ void Abb::remover(int valor){
             }else{//ou seja, se a sub-árvore à direita não é nula
                 if(aux->getValor() > aux->getPai()->getValor()){//ou seja, é uma sub-árvore à direita de seu pai
                     ajustarNiveis(aux);
-                    aux->getPai()->setDir(aux->getEsq());
+                    aux->getPai()->setDir(aux->getDir());
                     while(decrementoQntFilhos->getPai() != nullptr){
                         decrementoQntFilhos->getPai()->decrementarQntDir();
                         decrementoQntFilhos = decrementoQntFilhos->getPai();
@@ -226,9 +226,9 @@ No* Abb::enesimoElemento(No* raiz, int n){
 
 int Abb::posicao(No* raiz,int x){
     int retorno;
-    int size = ordem.size();
+    int size = this->ordem.size();
     for(int i = 0; i < size; i++){
-        if(ordem[i]->getValor() == x){
+        if(this->ordem[i]->getValor() == x){
             retorno = i+1;
         }
     }
@@ -250,25 +250,23 @@ void Abb::ordemSimetrica(No* raiz){
 }
 
 int Abb::mediana(No* raiz){
-    if(ordem.size()%2 == 0){
-        return ordem[(ordem.size()/2)-1]->getValor();
+    if(this->ordem.size()%2 == 0){
+        return this->ordem[(this->ordem.size()/2)-1]->getValor();
     }else{
-        return ordem[ordem.size()/2]->getValor();
+        return this->ordem[this->ordem.size()/2]->getValor();
     }
 }
 
 void Abb::carregaVector(No* raiz){
-    static vector<No*> tqr ;
     if(raiz != nullptr){        
         if (raiz->getEsq() != nullptr){
             carregaVector(raiz->getEsq());
         } 
-        tqr.push_back(raiz);
+        this->ordem.push_back(raiz);
         if (raiz->getDir() != nullptr){
             carregaVector(raiz->getDir());
         }
     }
-    this->ordem = tqr;  
 }
 
 void Abb::esvaziarVector(){
@@ -279,11 +277,15 @@ void Abb::toString(){
     esvaziarVector();
     carregaVector(getRaiz());
     vector<string> nivel;
-    for(No* i : this->ordem){
-        nivel[i->getNivel()].append(to_string(i->getValor()));
+    calcularAltura();
+    for(int i = 0; i<=this->altura;i++){
+        nivel.push_back(" ");
     }
-    for(int i = 0; i < nivel.size(); i++){
-        cout << "Nivel " << i << ": " << nivel[i] << endl; 
+    for(No* i : this->ordem){
+        nivel[i->getNivel()].append(" " + (to_string(i->getValor())));
+    }
+    for(int i = 1; i < nivel.size(); i++){
+        cout << "Nivel " << i << ":" << nivel[i] << endl; 
     }
 }
 
@@ -306,28 +308,84 @@ void Abb::importarArvore(){
     }
 }
 
+bool Abb::ehCheia(){
+    int maior_nivel = 0;
+    for (int i = 0; i < ordem.size(); i++){
+        if(ordem[i]->getNivel() > maior_nivel){
+            maior_nivel = ordem[i]->getNivel();
+        }
+    }
+    for(int i = 0; i < ordem.size(); i++){
+        if (ordem[i]->getNivel() != maior_nivel){
+            if(ordem[i]->getDir() == nullptr || ordem[i]->getEsq() == nullptr){
+                return false;
+            }
+        }    
+    }
+    return true;
+}
+
+bool Abb::ehCompleta(){
+    int maior_nivel = 0;
+    for (int i = 0; i < ordem.size(); i++){
+        if(ordem[i]->getNivel() > maior_nivel){
+            maior_nivel = ordem[i]->getNivel();
+        }
+    }
+    for(int i = 0; i < ordem.size(); i++){
+        if(ordem[i]->getNivel() < (maior_nivel-1)){
+            if(ordem[i]->getDir() == nullptr || ordem[i]->getEsq() == nullptr){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void Abb::comando(){
     ifstream myfile;
     myfile.open("arquivodecomando.txt");
     string auxiliar; //string onde será armazenada a linha / auxiliará na leitura do arquivo
     while(getline(myfile, auxiliar)){ //espero que isso funcione -_-
-        if (auxiliar.compare("ENESIMO") == 0){
-            std::cout << "> Elemento escolhido: " << enesimoElemento(getRaiz(), std::stoi(auxiliar));
-        } else if (auxiliar.compare("POSICAO") == 0){
-        //vish
-        } else if (auxiliar.compare("MEDIANA") == 0){
-        //vish
-        } else if (auxiliar.compare("CHEIA") == 0){
-        //vish
-        } else if (auxiliar.compare("COMPLETA") == 0){
-        //vish
-        } else if (auxiliar.compare("IMPRIMA") == 0){
-        //vish
-        } else if (auxiliar.compare("REMOVA") == 0){
-            remover(std::stoi(auxiliar));
-        } else if (auxiliar.compare("INSIRA") == 0){
-            inserir(criarNo(std::stoi(auxiliar))); //i hope it works like this :')
+        string tokens[2];
+        istringstream iss(auxiliar);
+        iss >> tokens[0]; //chamada da função
+        iss >> tokens[1]; //argumento
+        if (tokens[0].compare("ENESIMO") == 0 && tokens[1] != ""){
+            std::cout << "> Elemento escolhido: " << enesimoElemento(getRaiz(), std::stoi(tokens[1]))->getValor() << endl;
+        } else if (tokens[0].compare("POSICAO") == 0 && tokens[1] != ""){
+            cout << "Posição do elemento " << tokens[1] << ": " << posicao(this->raiz, stoi(tokens[1]))<< endl;
+        } else if (tokens[0].compare("MEDIANA") == 0){
+            cout << "Mediana: " << mediana(this->raiz)<< endl;
+        } else if (tokens[0].compare("CHEIA") == 0){
+            if(ehCheia())
+                cout << "é cheia" << endl;
+            else
+                cout << "não é cheia" << endl;
+        } else if (tokens[0].compare("COMPLETA") == 0){
+            if(ehCompleta())
+                cout << "é completa" << endl;
+            else
+                cout << "não é completa" << endl;
+        } else if (tokens[0].compare("IMPRIMA") == 0){
+            toString();
+        } else if (tokens[0].compare("REMOVA") == 0 && tokens[1] != ""){
+            cout << "Remover elemento " << tokens[1] << endl;
+            remover(std::stoi(tokens[1]));
+        } else if (tokens[0].compare("INSIRA") == 0){
+            cout << "Inserir elemento " << tokens[1] << endl;
+            inserir(criarNo(std::stoi(tokens[1]))); //i hope it works like this :')
         }
     }
     myfile.close();
+}
+
+void Abb::calcularAltura(){
+    int altura = 0;
+    for(No* no : this->ordem){
+        if(no->getNivel()>altura){
+            altura = no->getNivel();
+        }
+    }
+    this->altura = altura;
 }

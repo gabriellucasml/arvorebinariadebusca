@@ -9,11 +9,8 @@ int main(int argc, char* argv[]){
     No* no = new No();
     No* aux = new No();
     arvore->importarArvore();
-    arvore->ordemSimetrica(arvore->getRaiz());
-    arvore->carregaVector(arvore->getRaiz());
-    cout << arvore->enesimoElemento(arvore->getRaiz(), 6)->getValor() << " <- Enesimo Elemento" << endl;
-    cout << arvore->posicao(arvore->getRaiz(),30) << " <- posicao" <<endl;
-    cout << arvore->mediana(arvore->getRaiz()) << " <- Mediana" << endl;
-    arvore->toString();
+    //arvore->remover(50);
+    //arvore->remover(85);
+    arvore->comando();
     return 0;
 }
