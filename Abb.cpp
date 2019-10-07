@@ -167,16 +167,21 @@ void Abb::remover(int valor){
             }
             if(maiorEsq->getEsq() == nullptr){//se o maior nó da sub-árvore à esquerda é folha
                 maiorEsq->setNivel(aux->getNivel());//Diz que o nível do maior nó da esquerda é igual ao nível do no que será deletado
+                maiorEsq->setPai(aux->getPai());
+                if(maiorEsq == aux->getEsq()){//se o maior nó da sub-árvore à esquerda for o único filho a esquerda do nó que será deletado
+                    maiorEsq->setEsq(nullptr);
+                }else{
+                    maiorEsq->setEsq(aux->getEsq());//diz que o filho do maior nó da esquerda é o filho à esquerda do nó que será deletado
+                    aux->getEsq()->setPai(maiorEsq);//diz que o pai do nó à esquerda do nó que será deletadado é o maior nó da subárvore à esquerda
+                }
                 maiorEsq->setDir(aux->getDir());//diz que o filho do maior nó da esquerda é o filho à direita do nó que será deletado
                 aux->getDir()->setPai(maiorEsq);//diz que o pai do nó à direita do nó que será deletadado é o maior nó da subárvore à esquerda
-                maiorEsq->setEsq(aux->getEsq());//diz que o filho do maior nó da esquerda é o filho à esquerda do nó que será deletado
-                aux->getEsq()->setPai(maiorEsq);//diz que o pai do nó à esquerda do nó que será deletadado é o maior nó da subárvore à esquerda
                 maiorEsq->setQntDir(aux->getQntDir());
                 maiorEsq->setQntEsq(aux->getQntEsq());
-                decrementoQntFilhos = maiorEsq;
             }else{                            //existe uma subárvore à esquerda
                 ajustarNiveis(maiorEsq->getEsq());
                 maiorEsq->setNivel(aux->getNivel());
+                maiorEsq->setPai(aux->getPai());
                 maiorEsq->getEsq()->setPai(maiorEsq->getPai());
                 maiorEsq->getPai()->setDir(maiorEsq->getEsq());
                 maiorEsq->setDir(aux->getDir());
@@ -193,16 +198,19 @@ void Abb::remover(int valor){
                 }
             }
             delete(aux);
+            delete(maiorEsq);
         }
     } else{
         cout << "Nó não existe na árvore!" << endl;
     }
 }
 
+int Abb::getAltura(){
+    return this->altura;
+}
+
 void Abb::ajustarNiveis(No* no){
-    if(no->getEsq() == nullptr && no->getDir() == nullptr)
-        no->decrementarNivel();
-    if(no->getEsq() != nullptr){
+    if(no != nullptr){
         ajustarNiveis(no->getEsq());
         no->decrementarNivel();
         ajustarNiveis(no->getDir());

@@ -20,6 +20,7 @@ public:
     bool ehCompleta();
     int posicao(No* raiz, int x);
     int mediana(No* raiz);
+    int getAltura();
     void calcularAltura();
     void setRaiz(int valor);
     void inserir(No* no);

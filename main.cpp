@@ -9,8 +9,8 @@ int main(int argc, char* argv[]){
     No* no = new No();
     No* aux = new No();
     arvore->importarArvore();
-    //arvore->remover(50);
-    //arvore->remover(85);
-    arvore->comando();
+    arvore->remover(50);
+    arvore->remover(85);
+    //arvore->comando();
     return 0;
 }
